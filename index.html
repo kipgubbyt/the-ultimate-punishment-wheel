@@ -1,109 +1,292 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#000000">
-  <title>Random Image Roll</title>
-  <style>
-    * { box-sizing: border-box; }
-    html, body {
-      width: 100%;
-      height: 100%;
-      margin: 0;
-      overflow: hidden;
-      background: #000000;
-    }
-    body {
-      height: 100vh;
-      height: 100dvh;
-      color: #000000;
-      overscroll-behavior: none;
-      -webkit-tap-highlight-color: transparent;
-    }
-    .page {
-      width: 100%;
-      height: 100%;
-      height: 100dvh;
-      display: grid;
-      grid-template-rows: minmax(0, 1fr) auto;
-      overflow: hidden;
-      padding:
-        env(safe-area-inset-top, 0px)
-        env(safe-area-inset-right, 0px)
-        env(safe-area-inset-bottom, 0px)
-        env(safe-area-inset-left, 0px);
-    }
-    .image-area {
-      min-width: 0;
-      min-height: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-    }
-    #display-image {
-      display: block;
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      object-position: center;
-    }
-    .controls {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 12px 16px 16px;
-      flex: none;
-    }
-    #roll-button {
-      appearance: none;
-      border: 0;
-      border-radius: 0;
-      background: #ffffff;
-      color: #000000;
-      font: 600 16px/1.2 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      min-width: 132px;
-      min-height: 48px;
-      padding: 14px 28px;
-      cursor: pointer;
-    }
-    #roll-button:focus-visible {
-      outline: 2px solid #ffffff;
-      outline-offset: 3px;
-    }
-    #roll-button:active { background: #e8e8e8; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#000000">
+<title>Random Roll</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+html, body {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: #000000;
+}
+
+body {
+    height: 100vh;
+    height: 100dvh;
+    overscroll-behavior: none;
+}
+
+.page {
+    width: 100%;
+    height: 100%;
+    height: 100dvh;
+    display: grid;
+    grid-template-rows: minmax(0, 1fr) auto;
+    overflow: hidden;
+}
+
+.display {
+    min-width: 0;
+    min-height: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    padding: 12px;
+    color: white;
+    text-align: center;
+}
+
+#image {
+    display: none;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+#text {
+    display: none;
+    max-width: 100%;
+    max-height: 100%;
+    overflow: hidden;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    color: white;
+    font: 24px/1.35 system-ui, sans-serif;
+}
+
+.controls {
+    display: flex;
+    justify-content: center;
+    padding: 12px 16px 16px;
+}
+
+button {
+    border: none;
+    border-radius: 0;
+    background: #ffffff;
+    color: #000000;
+    font: 600 16px system-ui, sans-serif;
+    min-width: 132px;
+    min-height: 48px;
+    padding: 14px 28px;
+    cursor: pointer;
+}
+
+button:disabled {
+    opacity: 0.6;
+}
+</style>
 </head>
-<body>
-  <main class="page">
-    <div class="image-area">
-      <img id="display-image" alt="">
-    </div>
-    <div class="controls">
-      <button id="roll-button" type="button">Roll</button>
-    </div>
-  </main>
-  <script>
-    const images = ["images/frame_00_delay-0.02s.png", "images/frame_01_delay-0.02s.png", "images/frame_02_delay-0.02s.png", "images/frame_03_delay-0.02s.png", "images/frame_04_delay-0.02s.png", "images/frame_05_delay-0.02s.png", "images/frame_06_delay-0.02s.png", "images/frame_07_delay-0.02s.png", "images/frame_08_delay-0.02s.png", "images/frame_09_delay-0.02s.png", "images/frame_10_delay-0.02s.png", "images/frame_11_delay-0.02s.png", "images/frame_12_delay-0.02s.png", "images/frame_13_delay-0.02s.png", "images/frame_14_delay-0.02s.png", "images/frame_15_delay-0.02s.png", "images/frame_16_delay-0.02s.png", "images/frame_17_delay-0.02s.png", "images/frame_18_delay-0.02s.png", "images/frame_19_delay-0.02s.png", "images/frame_20_delay-0.02s.png", "images/frame_21_delay-0.02s.png", "images/frame_22_delay-0.02s.png", "images/frame_23_delay-0.02s.png", "images/frame_24_delay-0.02s.png", "images/frame_25_delay-0.02s.png", "images/frame_26_delay-0.02s.png", "images/frame_27_delay-0.02s.png", "images/frame_28_delay-0.02s.png", "images/frame_29_delay-0.02s.png", "images/frame_30_delay-0.02s.png", "images/frame_31_delay-0.02s.png", "images/frame_32_delay-0.02s.png", "images/frame_33_delay-0.02s.png", "images/frame_34_delay-0.02s.png", "images/frame_35_delay-0.02s.png", "images/frame_36_delay-0.02s.png", "images/frame_37_delay-0.02s.png", "images/frame_38_delay-0.02s.png", "images/frame_39_delay-0.02s.png", "images/frame_40_delay-0.02s.png", "images/frame_41_delay-0.02s.png", "images/frame_42_delay-0.02s.png", "images/frame_43_delay-0.02s.png", "images/frame_44_delay-0.02s.png", "images/frame_45_delay-0.02s.png", "images/frame_46_delay-0.02s.png", "images/frame_47_delay-0.02s.png", "images/frame_48_delay-0.02s.png", "images/frame_49_delay-0.02s.png", "images/frame_50_delay-0.02s.png", "images/frame_51_delay-0.02s.png", "images/frame_52_delay-0.02s.png", "images/frame_53_delay-0.02s.png", "images/frame_54_delay-0.02s.png", "images/frame_55_delay-0.02s.png", "images/frame_56_delay-0.02s.png", "images/frame_57_delay-0.02s.png", "images/frame_58_delay-0.02s.png", "images/frame_59_delay-0.02s.png", "images/frame_60_delay-0.02s.png", "images/frame_61_delay-0.02s.png", "images/frame_62_delay-0.02s.png", "images/frame_63_delay-0.02s.png", "images/frame_64_delay-0.02s.png", "images/frame_65_delay-0.02s.png", "images/frame_66_delay-0.02s.png", "images/frame_67_delay-0.02s.png", "images/frame_68_delay-0.02s.png", "images/frame_69_delay-0.02s.png", "images/frame_70_delay-0.02s.png", "images/frame_71_delay-0.02s.png", "images/frame_72_delay-0.02s.png", "images/frame_73_delay-0.02s.png", "images/frame_74_delay-0.02s.png", "images/frame_75_delay-0.02s.png", "images/frame_76_delay-0.02s.png", "images/frame_77_delay-0.02s.png", "images/frame_78_delay-0.02s.png", "images/frame_79_delay-0.02s.png", "images/frame_80_delay-0.02s.png", "images/frame_81_delay-0.02s.png", "images/frame_82_delay-0.02s.png", "images/frame_83_delay-0.02s.png", "images/frame_84_delay-0.02s.png", "images/frame_85_delay-0.02s.png", "images/frame_86_delay-0.02s.png", "images/frame_87_delay-0.02s.png", "images/frame_88_delay-0.02s.png", "images/frame_89_delay-0.02s.png", "images/frame_90_delay-0.02s.png", "images/frame_91_delay-0.02s.png"];
-    const imageElement = document.getElementById("display-image");
-    const rollButton = document.getElementById("roll-button");
-    let currentIndex = -1;
 
-    function roll() {
-      let nextIndex = Math.floor(Math.random() * images.length);
-      if (images.length > 1) {
-        while (nextIndex === currentIndex) {
-          nextIndex = Math.floor(Math.random() * images.length);
-        }
-      }
-      currentIndex = nextIndex;
-      imageElement.src = images[currentIndex];
-      rollButton.textContent = "Reroll";
+<body>
+
+<main class="page">
+
+    <section class="display">
+        <img id="image" alt="">
+        <pre id="text"></pre>
+    </section>
+
+    <div class="controls">
+        <button id="rollButton">Roll</button>
+    </div>
+
+</main>
+
+<script>
+
+// ========================================
+// GITHUB SETTINGS
+// ========================================
+
+// CHANGE THESE TWO VALUES!
+
+const GITHUB_OWNER = "kipgubbyt";
+const GITHUB_REPO = "the-ultimate-punishment-wheel";
+
+const GITHUB_BRANCH = ""; 
+// Leave blank to automatically use the default branch.
+
+const FOLDER = "images";
+
+// ========================================
+
+const imageExtensions = [
+    "png", "jpg", "jpeg", "gif",
+    "webp", "avif", "bmp", "svg"
+];
+
+const textExtensions = ["txt"];
+
+const imageElement = document.getElementById("image");
+const textElement = document.getElementById("text");
+const rollButton = document.getElementById("rollButton");
+
+let entries = [];
+let previousIndex = -1;
+
+
+// Get repository information and files
+
+async function loadFiles() {
+
+    const repoResponse = await fetch(
+        `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}`
+    );
+
+    if (!repoResponse.ok) {
+        throw new Error("Couldn't access the GitHub repository.");
     }
 
-    rollButton.addEventListener("click", roll);
-    roll();
-  </script>
+    const repoData = await repoResponse.json();
+
+    const branch = GITHUB_BRANCH || repoData.default_branch;
+
+    const filesResponse = await fetch(
+        `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${FOLDER}?ref=${branch}`
+    );
+
+    if (!filesResponse.ok) {
+        throw new Error("Couldn't find the images folder.");
+    }
+
+    const files = await filesResponse.json();
+
+    if (!Array.isArray(files)) {
+        throw new Error("The images folder is invalid.");
+    }
+
+    return files
+        .filter(file => file.type === "file")
+        .filter(file => {
+            const extension = file.name.split(".").pop().toLowerCase();
+
+            return (
+                imageExtensions.includes(extension) ||
+                textExtensions.includes(extension)
+            );
+        })
+        .map(file => ({
+            name: file.name,
+            url: file.download_url,
+            type: textExtensions.includes(
+                file.name.split(".").pop().toLowerCase()
+            ) ? "text" : "image"
+        }));
+}
+
+
+// Pick a random file
+
+function chooseRandom() {
+
+    if (entries.length === 0) {
+        throw new Error("No supported files found!");
+    }
+
+    let index = Math.floor(Math.random() * entries.length);
+
+    // Avoid selecting the same file twice consecutively.
+    if (entries.length > 1) {
+        while (index === previousIndex) {
+            index = Math.floor(Math.random() * entries.length);
+        }
+    }
+
+    previousIndex = index;
+
+    return entries[index];
+}
+
+
+// Roll!
+
+async function roll() {
+
+    rollButton.disabled = true;
+
+    try {
+
+        const entry = chooseRandom();
+
+        if (entry.type === "text") {
+
+            imageElement.style.display = "none";
+            imageElement.removeAttribute("src");
+
+            textElement.style.display = "block";
+
+            const response = await fetch(entry.url);
+
+            if (!response.ok) {
+                throw new Error("Couldn't load the text file.");
+            }
+
+            textElement.textContent = await response.text();
+
+        } else {
+
+            textElement.style.display = "none";
+            textElement.textContent = "";
+
+            imageElement.style.display = "block";
+            imageElement.src = entry.url;
+            imageElement.alt = entry.name;
+
+        }
+
+        rollButton.textContent = "Reroll";
+
+    } catch (error) {
+
+        imageElement.style.display = "none";
+        textElement.style.display = "block";
+        textElement.textContent = error.message;
+
+    }
+
+    rollButton.disabled = false;
+}
+
+
+// Startup
+
+async function start() {
+
+    rollButton.disabled = true;
+
+    try {
+
+        entries = await loadFiles();
+
+        await roll();
+
+    } catch (error) {
+
+        textElement.style.display = "block";
+        textElement.textContent = error.message;
+
+    }
+
+    rollButton.disabled = false;
+}
+
+
+rollButton.addEventListener("click", roll);
+
+start();
+
+</script>
+
 </body>
 </html>
